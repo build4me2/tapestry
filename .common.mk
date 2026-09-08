@@ -58,6 +58,7 @@ include ${CONTRIB_TARGETS_MKS}
 # These targets are convenient, but also used by some tools.
 .PHONY: print-contrib-mks print-contrib-targets-mks print-contrib-custom-mks
 .PHONY: print-contrib-mks-count print-contrib-targets-mks-count print-contrib-custom-mks-count
+.PHONY: print-contrib-targets-mks-included print-contrib-targets-mks-included-count
 
 print-contrib-mks:: print-contrib-targets-mks print-contrib-custom-mks
 print-contrib-targets-mks::
@@ -74,6 +75,15 @@ print-contrib-targets-mks-count::
 	@echo $(words ${CONTRIB_TARGETS_MKS})
 print-contrib-custom-mks-count::
 	@echo $(words ${CONTRIB_CUSTOM_MKS})
+
+# The files above are the ones found on disk. These two report the ones make
+# actually read, taken from MAKEFILE_LIST, so a lost or misplaced
+# "include ${CONTRIB_TARGETS_MKS}" shows up as a smaller count instead of
+# going unnoticed. The CI check compares the two.
+print-contrib-targets-mks-included::
+	@echo $(filter ${CONTRIB_DIR}/%,${MAKEFILE_LIST})
+print-contrib-targets-mks-included-count::
+	@echo $(words $(filter ${CONTRIB_DIR}/%,${MAKEFILE_LIST}))
 
 # The quality targets we run as part of "before-pr".
 # GITHUB_CI is set to a non-empty string in our .github/workflows/ci.yml

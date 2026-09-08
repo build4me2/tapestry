@@ -29,8 +29,8 @@ jobs:
       # otherwise the contributions' custom targets are silently unreachable.
       - name: Check contrib custom .targets.mk are properly included by Makefile
         run: |
-          expected=$(ls contrib/*/.targets.mk 2>/dev/null | wc -l)
-          actual=$(make print-contrib-targets-mks-count)
+          expected=$(make print-contrib-targets-mks-count)
+          actual=$(make print-contrib-targets-mks-included-count)
           echo "contrib .targets.mk files: $expected present, $actual included"
           test "$expected" -eq "$actual"
 
